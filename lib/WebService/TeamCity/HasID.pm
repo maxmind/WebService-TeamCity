@@ -20,3 +20,5 @@ has id => (
 );
 
 1;
+
+# ABSTRACT: Role for any REST API object with an ID

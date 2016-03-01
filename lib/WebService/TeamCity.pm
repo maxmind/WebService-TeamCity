@@ -203,3 +203,101 @@ sub _decamelize_keys {
 1;
 
 # ABSTRACT: Client for the TeamCity REST API
+
+__END__
+
+=pod
+
+=for Pod::Coverage response_for
+
+=head1 SYNOPSIS
+
+    use WebService::TeamCity;
+
+    my $client = WebService::TeamCity->new(
+        scheme   => 'https',
+        host     => 'tc.example.com',
+        port     => 8123,
+        user     => 'tc-user',
+        password => 'tc-password',
+    );
+
+    my $projects = $client->projects;
+    for my $project ( @{$projects} ) {
+        say $project->id;
+        for my $build_type ( @{ $project->build_types } ) {
+            say $build_type->id;
+        }
+    }
+
+    my $projects = $client->projects;
+    for my $project ( @{$projects} ) {
+        ...;
+    }
+
+=head1 DESCRIPTION
+
+This distribution provides a client for the TeamCity REST API.
+
+Currently, this client targets the TeamCity 9.1 release exclusively. It is
+also quite incomplete and only supports read operations. Pull requests are
+very welcome!
+
+The entry point for the API is this module, C<WebService::TeamCity>. Once you
+have an object of that class, you can use it to get at various other objects
+provided by the API.
+
+=head1 API
+
+This module provides the top-level client for the API.
+
+=head2 WebService::TeamCity->new(...)
+
+This method takes named parameters to construct a new TeamCity client.
+
+=over 4
+
+=item * scheme
+
+The URL scheme to use. This defaults to C<http>.
+
+=item * host
+
+The host to connect to. Required.
+
+=item * port
+
+The port to connect to. By default, this just uses whatever the scheme
+normally uses.
+
+=item * user
+
+The username to use for authentication. Required.
+
+=item * password
+
+The password to use for authentication. Required.
+
+=item * ua
+
+An instance of L<LWP::UserAgent>. You can pass one in for testing and
+debugging purposes.
+
+=back
+
+=head2 $client->projects
+
+Returns an array reference of L<WebService::TeamCity::Project> objects. This
+contains all the projects defined on the TeamCity server.
+
+=head2 $client->build_types
+
+Returns an array reference of L<WebService::TeamCity::BuildTypes> objects. This
+contains all the build types defined on the TeamCity server.
+
+=head2 $client->builds
+
+Returns a L<WebService::TeamCity::Iterator> which returns
+L<WebService::TeamCity::Build> objects.
+
+=cut

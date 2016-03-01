@@ -20,3 +20,5 @@ has web_url => (
 );
 
 1;
+
+# ABSTRACT: Role for any REST API object with a web URL

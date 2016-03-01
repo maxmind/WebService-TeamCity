@@ -59,7 +59,7 @@ sub next {
 
     if ( $i >= @{$items} ) {
         $self->_fetch_more
-            or return;
+            or return undef;
     }
     my $obj = $self->class->new(
         client => $self->client,
@@ -91,3 +91,28 @@ sub _fetch_more {
 }
 
 1;
+
+# ABSTRACT: Generic object iterator for paged results from the TeamCity REST API
+
+__END__
+
+=pod
+
+=for Pod::Coverage class client items_key
+
+=head1 SYNOPSIS
+
+    my $builds = $client->builds;
+    while ( my $build = $builds->next ) { ... }
+
+=head1 API
+
+This class offers one public method:
+
+=head2 $iterator->next
+
+This returns the next object from the result set. If necessary, it will fetch
+the next page of results from the server. It returns C<undef> when there are
+no more objects to fetch.
+
+=cut

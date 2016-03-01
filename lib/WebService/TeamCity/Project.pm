@@ -52,18 +52,18 @@ has build_types => (
     },
 );
 
-has templates => (
-    is      => 'ro',
-    isa     => ArrayRef [ InstanceOf ['WebService::TeamCity::BuildType'] ],
-    lazy    => 1,
-    default => sub {
-        $_[0]->_inflate_array(
-            $_[0]->_full_data->{templates}{build_type},
-            'BuildType',
-            'project',
-        );
-    },
-);
+# has templates => (
+#     is      => 'ro',
+#     isa     => ArrayRef [ InstanceOf ['WebService::TeamCity::BuildType'] ],
+#     lazy    => 1,
+#     default => sub {
+#         $_[0]->_inflate_array(
+#             $_[0]->_full_data->{templates}{build_type},
+#             'BuildType',
+#             'project',
+#         );
+#     },
+# );
 
 # has parameters => (
 #     is      => 'ro',
@@ -110,3 +110,64 @@ sub _build_parent_project {
 }
 
 1;
+
+# ABSTRACT: A single TeamCity project
+
+__END__
+
+=pod
+
+=head1 SYNOPSIS
+
+    my $project = ...;
+
+    my $parent = $project->parent_project;
+
+=head1 DESCRIPTION
+
+This class represents a single TeamCity project.
+
+=head1 API
+
+This class has the following methods:
+
+=head2 $project->href
+
+Returns the REST API URI for the project, without the scheme and host.
+
+=head2 $project->name
+
+Returns the project's name.
+
+=head2 $project->description
+
+Returns the project's description.
+
+=head2 $project->id
+
+Returns the project's id string.
+
+=head2 $project->web_url
+
+Returns a browser-friendly URI for the project.
+
+=head2 $project->archived
+
+Returns true if the project has been archived.
+
+=head2 $project->parent_project
+
+Returns the L<WebService::TeamCity::Project> for the project's parent, if it
+has one.
+
+=head2 $project->child_projects
+
+Returns an arrayref of L<WebService::TeamCity::Project> objects. If there are
+no child projects it returns an empty arrayref.
+
+=head2 $project->build_types
+
+Returns an arrayref of L<WebService::TeamCity::BuildType> objects for the
+build types associated with this project.
+
+=cut

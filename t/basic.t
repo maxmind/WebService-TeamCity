@@ -34,39 +34,40 @@ $ua->map_response(
         );
     }
 );
-
-my $client = WebService::TeamCity->new(
-    host     => 'example.com',
-    user     => 'u',
-    password => 'p',
-    ua       => $ua,
-);
-
-my $git = test_projects($client);
-my $build = test_build_types($git);
-my $test = test_build($build);
-test_test_occurrence($test);
-
 {
-    my $build_types = $client->build_types;
-    is(
-        scalar @{$build_types},
-        536,
-        'got 536 build types'
+    my $client = WebService::TeamCity->new(
+        host     => 'example.com',
+        user     => 'u',
+        password => 'p',
+        ua       => $ua,
     );
-}
 
-{
-    my $builds = $client->builds;
-    my @builds;
-    while ( my $build = $builds->next ) {
-        push @builds, $build;
+    my $git   = test_projects($client);
+    my $build = test_build_types($git);
+    my $test  = test_build($build);
+    test_test_occurrence($test);
+
+    {
+        my $build_types = $client->build_types;
+        is(
+            scalar @{$build_types},
+            536,
+            'got 536 build types'
+        );
     }
-    is(
-        scalar @builds,
-        200,
-        'found 200 builds'
-    );
+
+    {
+        my $builds = $client->builds;
+        my @builds;
+        while ( my $b = $builds->next ) {
+            push @builds, $b;
+        }
+        is(
+            scalar @builds,
+            200,
+            'found 200 builds'
+        );
+    }
 }
 
 done_testing();
@@ -132,12 +133,6 @@ sub test_projects {
         $git->child_projects,
         [],
         'git plugin project has no child projects',
-    );
-
-    is_deeply(
-        $git->templates,
-        [],
-        'git plugin project has no templates',
     );
 
     return $git;

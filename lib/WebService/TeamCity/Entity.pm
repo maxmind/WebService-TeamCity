@@ -47,3 +47,5 @@ sub _parse_datetime {
 }
 
 1;
+
+# ABSTRACT: Role for anything addressable via the TeamCity REST API

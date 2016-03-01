@@ -25,17 +25,17 @@ has project => (
     },
 );
 
-has template => (
-    is      => 'ro',
-    isa     => Maybe [ InstanceOf [__PACKAGE__] ],
-    lazy    => 1,
-    default => sub {
-        $_[0]->_inflate_one(
-            'Project',
-            $_[0]->_full_data->{template},
-        );
-    },
-);
+# has template => (
+#     is      => 'ro',
+#     isa     => Maybe [ InstanceOf [__PACKAGE__] ],
+#     lazy    => 1,
+#     default => sub {
+#         $_[0]->_inflate_one(
+#             $_[0]->_full_data->{template},
+#             'Template',
+#         );
+#     },
+# );
 
 has builds => (
     is      => 'ro',
@@ -73,3 +73,55 @@ with(
 );
 
 1;
+
+# ABSTRACT: A single TeamCity build type
+
+__END__
+
+=pod
+
+=head1 SYNOPSIS
+
+    my $build_type = ...;
+
+    my $template = $build_type->template;
+
+=head1 DESCRIPTION
+
+This class represents a single TeamCity build type.
+
+=head1 API
+
+This class has the following methods:
+
+=head2 $build_type->href
+
+Returns the REST API URI for the build type, without the scheme and host.
+
+=head2 $build_type->name
+
+Returns the build type's name.
+
+=head2 $build_type->description
+
+Returns the build type's description.
+
+=head2 $build_type->id
+
+Returns the build type's id string.
+
+=head2 $build_type->web_url
+
+Returns a browser-friendly URI for the build type.
+
+=head2 $build_type->project
+
+Returns the L<WebService::TeamCity::Project> for the project associated with
+the build type.
+
+=head2 $build_type->builds
+
+Returns a L<WebService::TeamCity::Iterator> which returns
+L<WebService::TeamCity::Build> objects.
+
+=cut

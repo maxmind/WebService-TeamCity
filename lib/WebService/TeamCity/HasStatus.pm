@@ -32,3 +32,5 @@ has failed => (
 );
 
 1;
+
+# ABSTRACT: Role for any REST API object with a status

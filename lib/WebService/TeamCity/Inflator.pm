@@ -54,3 +54,5 @@ sub _iterator_for {
 }
 
 1;
+
+# ABSTRACT: Role for any class that inflates REST API objects from JSON
