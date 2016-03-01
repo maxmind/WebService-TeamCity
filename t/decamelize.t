@@ -44,6 +44,7 @@ use WebService::TeamCity;
         ],
     );
 
+    ## no critic (Subroutines::ProtectPrivateSubs)
     is_deeply(
         WebService::TeamCity->_decamelize_keys( \%camel ),
         \%expect,

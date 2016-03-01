@@ -9,6 +9,7 @@ our $VERSION = '0.01';
 
 use Cpanel::JSON::XS;
 use Data::Visitor::Callback;
+use HTTP::Request;
 use LWP::UserAgent;
 use String::CamelSnakeKebab qw( lower_snake_case );
 use Try::Tiny;

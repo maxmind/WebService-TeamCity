@@ -170,9 +170,9 @@ subtest(
                 second    => 56,
                 time_zone => '+0300',
             ),
-            href   => '/httpAuth/app/rest/builds/id:667885',
-            id     => 667885,
-            number => 'snapshot-43',
+            href        => '/httpAuth/app/rest/builds/id:667885',
+            id          => 667885,
+            number      => 'snapshot-43',
             queued_date => DateTime->new(
                 year      => 2016,
                 month     => 1,
@@ -249,14 +249,14 @@ subtest(
     }
 );
 
-my $build = $test->build;
+my $build_from_test = $test->build;
 isa_ok(
-    $build,
+    $build_from_test,
     'WebService::TeamCity::Build',
     '$test->build'
 );
 is(
-    $build->id,
+    $build_from_test->id,
     667885,
     'got expected build from test occurrence'
 );

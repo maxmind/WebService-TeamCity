@@ -42,7 +42,7 @@ sub _iterator_for {
     my $items_key = shift;
     my $class     = shift;
 
-    my $raw = $self->client->response_for(path => $url);
+    my $raw = $self->client->response_for( path => $url );
 
     return WebService::TeamCity::Iterator->new(
         client    => $self->client,

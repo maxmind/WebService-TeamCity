@@ -6,6 +6,7 @@ use autodie;
 use Cpanel::JSON::XS qw( decode_json );
 use Data::Visitor::Callback;
 use HTTP::Cookies;
+use HTTP::Headers;
 use LWP::UserAgent;
 use Path::Class qw( dir );
 use URI;
@@ -32,10 +33,10 @@ $ua->get( $uri_base . '?guest=1' );
 
 my %seen;
 for my $uri (@uris) {
-    say $uri;
+    say $uri or die;
     my $res = $ua->get($uri);
     unless ( $res->is_success ) {
-        say $res->content;
+        say $res->content or die;
         next;
     }
 
@@ -46,7 +47,9 @@ for my $uri (@uris) {
 
     my $file = $dir->file( $path . '.json' );
 
+    ## no critic (ValuesAndExpressions::ProhibitLeadingZeros)
     $file->parent->mkpath( 0, 0755 );
+    ## use critic
 
     my $raw = $res->decoded_content;
     $file->spew($raw);
@@ -69,7 +72,8 @@ for my $uri (@uris) {
 
             return
                 if $uri =~ m{/rest/buildTypes/id:}
-                && $uri !~ /id:(?:TeamCityPluginsByJetBrains_Git_JetBrainsGitPluginTeamCity91x)/;
+                && $uri
+                !~ /id:(?:TeamCityPluginsByJetBrains_Git_JetBrainsGitPluginTeamCity91x)/;
 
             return
                 if $uri =~ m{/rest/builds/id:}

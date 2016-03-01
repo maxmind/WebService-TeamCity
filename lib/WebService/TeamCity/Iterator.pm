@@ -50,6 +50,7 @@ has _i => (
     default => 0,
 );
 
+## no critic (Subroutines::ProhibitBuiltinHomonyms)
 sub next {
     my $self = shift;
 
@@ -68,6 +69,7 @@ sub next {
 
     return $obj;
 }
+## use critic
 
 sub _fetch_more {
     my $self = shift;
