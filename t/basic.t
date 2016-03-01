@@ -19,7 +19,7 @@ $ua->map_response(
 
         my $path = $req->uri->path_query;
         $path =~ s{/httpAuth/app/rest/}{};
-        $path =~ s{/$}{};
+        $path =~ s{/(?=\?|$)}{};
 
         my $file = path( 't/fixtures', $path . '.json' );
 
@@ -46,6 +46,28 @@ my $git = test_projects($client);
 my $build = test_build_types($git);
 my $test = test_build($build);
 test_test_occurrence($test);
+
+{
+    my $build_types = $client->build_types;
+    is(
+        scalar @{$build_types},
+        536,
+        'got 536 build types'
+    );
+}
+
+{
+    my $builds = $client->builds;
+    my @builds;
+    while ( my $build = $builds->next ) {
+        push @builds, $build;
+    }
+    is(
+        scalar @builds,
+        200,
+        'found 200 builds'
+    );
+}
 
 done_testing();
 

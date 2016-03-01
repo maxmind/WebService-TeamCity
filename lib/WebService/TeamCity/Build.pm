@@ -40,15 +40,15 @@ has test_occurrences => (
 );
 
 has default_branch => (
-    is       => 'ro',
-    isa      => Bool,
-    required => 1,
+    is        => 'ro',
+    isa       => Bool,
+    predicate => 'has_default_branch',
 );
 
 has branch_name => (
-    is       => 'ro',
-    isa      => Str,
-    required => 1,
+    is        => 'ro',
+    isa       => Str,
+    predicate => 'has_branch_name',
 );
 
 has number => (

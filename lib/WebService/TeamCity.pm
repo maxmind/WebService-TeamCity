@@ -16,6 +16,9 @@ use Try::Tiny;
 use Types::Standard qw( ArrayRef InstanceOf Int Str );
 use URI::FromHash qw( uri );
 use URI;
+use WebService::TeamCity::Build;
+use WebService::TeamCity::BuildType;
+use WebService::TeamCity::Iterator;
 use WebService::TeamCity::Project;
 
 use Moo;
@@ -74,7 +77,14 @@ has build_types => (
     is      => 'ro',
     isa     => ArrayRef [ InstanceOf ['WebService::TeamCity::BuildType'] ],
     lazy    => 1,
-    builder => '_build_built_types',
+    builder => '_build_build_types',
+);
+
+has builds => (
+    is      => 'ro',
+    isa     => InstanceOf ['WebService::TeamCity::Iterator'],
+    lazy    => 1,
+    builder => '_build_builds',
 );
 
 with 'WebService::TeamCity::Inflator';
@@ -93,6 +103,18 @@ sub _build_build_types {
     my $types = $self->response_for( path => 'buildTypes' );
 
     return $self->_inflate_array( $types->{build_type}, 'BuildType' );
+}
+
+sub _build_builds {
+    my $self = shift;
+
+    my $builds = $self->response_for( path => 'builds' );
+
+    return $self->_iterator_for(
+        'builds',
+        'build',
+        'Build',
+    );
 }
 
 sub client { $_[0] }
