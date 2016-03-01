@@ -1,0 +1,298 @@
+use strict;
+use warnings;
+
+use Test::More 0.96;
+
+use DateTime;
+use HTTP::Response;
+use Path::Tiny;
+use Test::LWP::UserAgent;
+use WebService::TeamCity;
+
+my $ua = Test::LWP::UserAgent->new( network_fallback => 0 );
+$ua->map_response(
+    sub {
+        return 1;
+    },
+    sub {
+        my $req = shift;
+
+        my $path = $req->uri->path_query;
+        $path =~ s{/httpAuth/app/rest/}{};
+        $path =~ s{/$}{};
+
+        my $file = path( 't/fixtures', $path . '.json' );
+
+        return HTTP::Response->new(404)
+            unless $file->exists;
+
+        return HTTP::Response->new(
+            200,
+            undef,
+            [ 'Content-Type' => 'application/json' ],
+            scalar $file->slurp,
+        );
+    }
+);
+
+my $client = WebService::TeamCity->new(
+    host     => 'example.com',
+    user     => 'u',
+    password => 'p',
+    ua       => $ua,
+);
+
+my $projects = $client->projects;
+is(
+    scalar @{$projects},
+    159,
+    'got 159 projects'
+);
+
+my %by_id = map { $_->id => $_ } @{$projects};
+ok( $by_id{_Root}, 'found a project where id = _Root' );
+ok(
+    $by_id{TeamCityPluginsByJetBrains_Git},
+    'found a project where id = TeamCityPluginsByJetBrains_Git'
+);
+
+my $root = $by_id{_Root};
+subtest(
+    '_Root project attributes',
+    sub {
+        test_attr(
+            $root,
+            name        => '<Root project>',
+            description => 'Contains all other projects',
+            href        => '/httpAuth/app/rest/projects/id:_Root',
+            web_url =>
+                'https://teamcity.jetbrains.com/project.html?projectId=_Root',
+        );
+    }
+);
+
+is(
+    $root->parent_project,
+    undef,
+    'root has no parent project'
+);
+
+my $children = $root->child_projects;
+is(
+    scalar @{$children},
+    45,
+    'root has 45 child projects'
+);
+isa_ok(
+    $children->[0],
+    'WebService::TeamCity::Project',
+    'first project'
+);
+
+my $git = $by_id{TeamCityPluginsByJetBrains_Git};
+is(
+    $git->parent_project->id,
+    'TeamCityPluginsByJetBrains',
+    'parent project for git plugin project is TeamCityPluginsByJetBrains'
+);
+
+is_deeply(
+    $git->child_projects,
+    [],
+    'git plugin project has no child projects',
+);
+
+is_deeply(
+    $git->templates,
+    [],
+    'git plugin project has no templates',
+);
+
+my $build_types = $git->build_types;
+is(
+    scalar @{$build_types},
+    5,
+    'git project has 5 build types'
+);
+
+my $git_build_91 = $build_types->[0];
+isa_ok(
+    $git_build_91,
+    'WebService::TeamCity::BuildType',
+    'first build type'
+);
+
+subtest(
+    'build type for git plugin with TC 9.1',
+    sub {
+        test_attr(
+            $git_build_91,
+            href =>
+                '/httpAuth/app/rest/buildTypes/id:TeamCityPluginsByJetBrains_Git_JetBrainsGitPluginTeamCity91x',
+            id =>
+                'TeamCityPluginsByJetBrains_Git_JetBrainsGitPluginTeamCity91x',
+            web_url =>
+                'https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_Git_JetBrainsGitPluginTeamCity91x',
+        );
+    }
+);
+
+is(
+    $git_build_91->project->id,
+    'TeamCityPluginsByJetBrains_Git',
+    'git build type returns expected project'
+);
+
+my $builds_iter = $git_build_91->builds;
+my @builds;
+while ( my $build = $builds_iter->next ) {
+    push @builds, $build;
+}
+is(
+    scalar @builds,
+    22,
+    'found 22 builds for build type'
+);
+
+my $build = $builds[0];
+subtest(
+    'first build for git build type',
+    sub {
+        test_attr(
+            $build,
+            branch_name => 'refs/heads/Hajipur-9.1.x',
+            finish_date => DateTime->new(
+                year      => 2016,
+                month     => 1,
+                day       => 13,
+                hour      => 17,
+                minute    => 38,
+                second    => 56,
+                time_zone => '+0300',
+            ),
+            href   => '/httpAuth/app/rest/builds/id:667885',
+            id     => 667885,
+            number => 'snapshot-43',
+            queued_date => DateTime->new(
+                year      => 2016,
+                month     => 1,
+                day       => 13,
+                hour      => 17,
+                minute    => 29,
+                second    => 16,
+                time_zone => '+0300',
+            ),
+            start_date => DateTime->new(
+                year      => 2016,
+                month     => 1,
+                day       => 13,
+                hour      => 17,
+                minute    => 29,
+                second    => 19,
+                time_zone => '+0300',
+            ),
+            state  => 'finished',
+            status => 'SUCCESS',
+            web_url =>
+                'https://teamcity.jetbrains.com/viewLog.html?buildId=667885&buildTypeId=TeamCityPluginsByJetBrains_Git_JetBrainsGitPluginTeamCity91x',
+        );
+        test_bool_attr(
+            $build,
+            default_branch => 1,
+            passed         => 1,
+            failed         => 0,
+        );
+    }
+);
+
+is(
+    $build->build_type->id,
+    'TeamCityPluginsByJetBrains_Git_JetBrainsGitPluginTeamCity91x',
+    'build has expected build type'
+);
+
+my $occurrences = $build->test_occurrences;
+isa_ok(
+    $occurrences,
+    'WebService::TeamCity::Iterator',
+    '$build->test_occurrences'
+);
+
+my @tests;
+while ( my $t = $occurrences->next ) {
+    push @tests, $t;
+}
+is(
+    scalar @tests,
+    224,
+    'found 224 test occurrences for build'
+);
+
+my $test = $tests[0];
+subtest(
+    'first test occurrence',
+    sub {
+        test_attr(
+            $test,
+            details => q{},
+            href =>
+                '/httpAuth/app/rest/testOccurrences/id:677,build:(id:667885)',
+            name =>
+                'Git Suite: jetbrains.buildServer.buildTriggers.vcs.git.tests.AuthSettingsTest.auth_uri_for_anonymous_protocol_should_not_have_user_and_password',
+            status => 'SUCCESS',
+        );
+        test_bool_attr(
+            $test,
+            passed => 1,
+            failed => 0,
+        );
+    }
+);
+
+my $build = $test->build;
+isa_ok(
+    $build,
+    'WebService::TeamCity::Build',
+    '$test->build'
+);
+is(
+    $build->id,
+    667885,
+    'got expected build from test occurrence'
+);
+
+done_testing();
+
+sub test_attr {
+    my $entity = shift;
+    my %expect = @_;
+
+    for my $attr ( sort keys %expect ) {
+        is(
+            $entity->$attr,
+            $expect{$attr},
+            $attr
+        );
+    }
+}
+
+sub test_bool_attr {
+    my $entity = shift;
+    my %expect = @_;
+
+    for my $attr ( sort keys %expect ) {
+        if ( $expect{$attr} ) {
+            ok(
+                $entity->$attr,
+                $attr
+            );
+        }
+        else {
+            ok(
+                !$entity->$attr,
+                $attr
+            );
+        }
+    }
+}
+
