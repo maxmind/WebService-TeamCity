@@ -42,7 +42,7 @@ for my $uri (@uris) {
 
     $seen{$uri} = 1;
 
-    my $path = $uri =~ s{^\Q$uri_base\E(?:/httpAuth)?/app/rest/}{}r;
+    ( my $path = $uri ) =~ s{^\Q$uri_base\E(?:/httpAuth)?/app/rest/}{};
     $path =~ s{/$}{};
 
     my $file = $dir->file( $path . '.json' );
