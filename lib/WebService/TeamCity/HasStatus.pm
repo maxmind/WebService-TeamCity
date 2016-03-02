@@ -7,15 +7,11 @@ use namespace::autoclean;
 
 our $VERSION = '0.01';
 
-use Types::Standard qw( Bool Str );
+use Types::Standard qw( Bool );
 
 use Moo::Role;
 
-has status => (
-    is       => 'ro',
-    isa      => Str,
-    required => 1,
-);
+requires 'status';
 
 has passed => (
     is      => 'ro',

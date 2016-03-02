@@ -7,12 +7,19 @@ use namespace::autoclean;
 
 our $VERSION = '0.01';
 
-use Types::Standard qw( Bool InstanceOf Maybe Str );
+use Types::Standard qw( Bool Maybe InstanceOf Str );
 use WebService::TeamCity::BuildType;
 use WebService::TeamCity::Iterator;
 use WebService::TeamCity::TestOccurrence;
+use WebService::TeamCity::Types qw( BuildStatus );
 
 use Moo;
+
+has status => (
+    is       => 'ro',
+    isa      => BuildStatus,
+    required => 1,
+);
 
 has build_type => (
     is      => 'ro',

@@ -7,7 +7,7 @@ use namespace::autoclean;
 
 our $VERSION = '0.01';
 
-use Types::Standard qw( InstanceOf Maybe Str );
+use Types::Standard qw( InstanceOf );
 use WebService::TeamCity::Build;
 use WebService::TeamCity::Iterator;
 

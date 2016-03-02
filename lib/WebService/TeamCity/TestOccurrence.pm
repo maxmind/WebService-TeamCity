@@ -8,8 +8,15 @@ use namespace::autoclean;
 our $VERSION = '0.01';
 
 use Types::Standard qw( InstanceOf Int Str );
+use WebService::TeamCity::Types qw( TestStatus );
 
 use Moo;
+
+has status => (
+    is       => 'ro',
+    isa      => TestStatus,
+    required => 1,
+);
 
 has duration => (
     is      => 'ro',
