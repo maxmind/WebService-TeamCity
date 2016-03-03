@@ -4,6 +4,7 @@ use warnings;
 use Test::More 0.96;
 
 use Cpanel::JSON::XS qw( encode_json );
+use DateTime;
 use HTTP::Response;
 use Test::LWP::UserAgent;
 use WebService::TeamCity;
