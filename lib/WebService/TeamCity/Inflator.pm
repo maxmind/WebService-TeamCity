@@ -38,7 +38,7 @@ sub _inflate_one {
 
 sub _iterator_for {
     my $self      = shift;
-    my $uri      = shift;
+    my $uri       = shift;
     my $items_key = shift;
     my $class     = shift;
 
