@@ -34,6 +34,7 @@ $ua->map_response(
         );
     }
 );
+
 {
     my $client = WebService::TeamCity->new(
         host     => 'example.com',

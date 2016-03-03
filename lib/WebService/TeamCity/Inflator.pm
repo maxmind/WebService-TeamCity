@@ -38,11 +38,11 @@ sub _inflate_one {
 
 sub _iterator_for {
     my $self      = shift;
-    my $url       = shift;
+    my $uri      = shift;
     my $items_key = shift;
     my $class     = shift;
 
-    my $raw = $self->client->response_for( path => $url );
+    my $raw = $self->client->response_for( uri => $uri );
 
     return WebService::TeamCity::Iterator->new(
         client    => $self->client,

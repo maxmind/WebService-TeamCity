@@ -39,7 +39,8 @@ has test_occurrences => (
     lazy    => 1,
     default => sub {
         $_[0]->_iterator_for(
-            $_[0]->_full_data->{test_occurrences}{href},
+                  $_[0]->client->base_uri
+                . $_[0]->_full_data->{test_occurrences}{href},
             'test_occurrence',
             'TestOccurrence',
         );

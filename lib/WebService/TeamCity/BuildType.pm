@@ -43,7 +43,7 @@ has builds => (
     lazy    => 1,
     default => sub {
         $_[0]->_iterator_for(
-            $_[0]->_full_data->{builds}{href},
+            $_[0]->client->base_uri . $_[0]->_full_data->{builds}{href},
             'build',
             'Build',
         );

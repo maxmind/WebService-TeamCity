@@ -37,7 +37,8 @@ with 'WebService::TeamCity::Inflator';
 sub _build_full_data {
     my $self = shift;
 
-    return $self->client->response_for( path => $self->href );
+    my $uri = $self->client->base_uri;
+    return $self->client->response_for( uri => $uri . $self->href );
 }
 
 my $parser = DateTime::Format::Strptime->new( pattern => '%Y%m%dT%H%M%S%z' );
