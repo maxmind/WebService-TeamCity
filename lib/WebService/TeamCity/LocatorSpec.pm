@@ -105,3 +105,5 @@ sub locator_string_for_args {
 }
 
 1;
+
+# ABSTRACT: Class to represent locator specifications
