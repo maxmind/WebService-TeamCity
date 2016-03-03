@@ -77,20 +77,143 @@ This method takes named parameters to construct a new TeamCity client.
     An instance of [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent). You can pass one in for testing and
     debugging purposes.
 
-## $client->projects
+## $client->projects(...)
 
 Returns an array reference of [WebService::TeamCity::Project](https://metacpan.org/pod/WebService::TeamCity::Project) objects. This
 contains all the projects defined on the TeamCity server.
+
+You can pass arguments as key/value pairs to limit the projects returned:
+
+- id => Str
+
+    Only return projects matching this id.
+
+- name => Str
+
+    Only return projects matching this name.
 
 ## $client->build\_types
 
 Returns an array reference of [WebService::TeamCity::BuildTypes](https://metacpan.org/pod/WebService::TeamCity::BuildTypes) objects. This
 contains all the build types defined on the TeamCity server.
 
+You can pass arguments as key/value pairs to limit the build types returned:
+
+- affected\_project => { ... }
+
+    Only return build types which affect the specified project. Projects can be
+    specified as defined for the `projects` method. This includes sub-projects of
+    the specified project.
+
+- id => Str
+
+    Only return build types matching this id.
+
+- name => Str
+
+    Only return build types matching this name.
+
+- paused => Bool
+
+    Only return build types which are or are not paused.
+
+- project => { ... }
+
+    Only return build types which affect the specified project. Projects can be
+    specified as defined for the `projects` method. This only includes the
+    project itself, not its sub-projects.
+
+- template => { ... }
+
+    Only return build types which use the specified template. The template is
+    defined the same way as a build type, but you cannot include a `template` key
+    for the template spec too.
+
+- template\_flag => Bool
+
+    Only return build types which are or are not templates.
+
 ## $client->builds
 
 Returns a [WebService::TeamCity::Iterator](https://metacpan.org/pod/WebService::TeamCity::Iterator) which returns
 [WebService::TeamCity::Build](https://metacpan.org/pod/WebService::TeamCity::Build) objects.
+
+You can pass arguments as key/value pairs to limit the projects returned:
+
+- affected\_project => { ... }
+
+    Only return builds which affect the specified project. Projects can be
+    specified as defined for the `projects` method. This includes sub-projects of
+    the specified project.
+
+- agent\_name => Str
+
+    Only return builds which used the specified agent.
+
+- branch => Str
+
+    Only return builds which were built against the specified branch.
+
+- build\_type => { ... }
+
+    Only return builds which were built using the specific build type. Build types
+    can be specified as defined for the `build_types` method.
+
+- canceled => Bool
+
+    Only returns builds which were or were not canceled.
+
+- failed\_to\_start => Bool
+
+    Only returns builds which did or did not fail to start.
+
+- id => Str
+
+    Only return builds matching this id.
+
+- lookup\_limit => Int
+
+    Only search the most recent N builds for a matching build.
+
+- name => Str
+
+    Only return builds matching this name.
+
+- number => Str
+
+    Only return builds matching this number.
+
+- personal => Bool
+
+    Only returns builds which are or are not marked as personal builds.
+
+- pinned => Bool
+
+    Only returns builds which are or are not pinned.
+
+- project => { ... }
+
+    Only return builds which affect the specified project. Projects can be
+    specified as defined for the `projects` method. This only includes the
+    project itself, not its sub-projects.
+
+- running => Bool
+
+    Only returns builds which are or are not running.
+
+- since\_date => DateTime
+
+    Only returns builds started on or after the specified datetime.
+
+- status => Str
+
+    Only returns builds with the specified status. This can be one of `SUCCESS`,
+    `FAILURE`, or `ERROR`.
+
+- tags => \[ ... \]
+
+    Only returns builds which match _all_ of the specified tags. Tags are given
+    as strings.
 
 # AUTHOR
 
