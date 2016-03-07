@@ -18,11 +18,11 @@ use Types::Standard qw( ArrayRef Bool Dict InstanceOf Int Optional Str );
 use URI::FromHash qw( uri_object );
 use URI::QueryParam;
 use URI;
-use WebService::TeamCity::Build;
-use WebService::TeamCity::BuildType;
+use WebService::TeamCity::Entity::Build;
+use WebService::TeamCity::Entity::BuildType;
 use WebService::TeamCity::Iterator;
 use WebService::TeamCity::LocatorSpec;
-use WebService::TeamCity::Project;
+use WebService::TeamCity::Entity::Project;
 use WebService::TeamCity::Types qw( BuildStatus DateTimeObject );
 
 use Moo;
@@ -395,8 +395,8 @@ debugging purposes.
 
 =head2 $client->projects(...)
 
-Returns an array reference of L<WebService::TeamCity::Project> objects. This
-contains all the projects defined on the TeamCity server.
+Returns an array reference of L<WebService::TeamCity::Entity::Project>
+objects. This contains all the projects defined on the TeamCity server.
 
 You can pass arguments as key/value pairs to limit the projects returned:
 
@@ -414,8 +414,8 @@ Only return projects matching this name.
 
 =head2 $client->build_types
 
-Returns an array reference of L<WebService::TeamCity::BuildTypes> objects. This
-contains all the build types defined on the TeamCity server.
+Returns an array reference of L<WebService::TeamCity::Entity::BuildType>
+objects. This contains all the build types defined on the TeamCity server.
 
 You can pass arguments as key/value pairs to limit the build types returned:
 
@@ -460,7 +460,7 @@ Only return build types which are or are not templates.
 =head2 $client->builds
 
 Returns a L<WebService::TeamCity::Iterator> which returns
-L<WebService::TeamCity::Build> objects.
+L<WebService::TeamCity::Entity::Build> objects.
 
 You can pass arguments as key/value pairs to limit the projects returned:
 

@@ -1,4 +1,4 @@
-package WebService::TeamCity::Project;
+package WebService::TeamCity::Entity::Project;
 
 use v5.10;
 use strict;
@@ -8,8 +8,8 @@ use namespace::autoclean;
 our $VERSION = '0.01';
 
 use Types::Standard qw( ArrayRef Bool InstanceOf Maybe Str );
-use WebService::TeamCity::BuildType;
-use WebService::TeamCity::Project;
+use WebService::TeamCity::Entity::BuildType;
+use WebService::TeamCity::Entity::Project;
 
 use Moo;
 
@@ -40,8 +40,9 @@ has child_projects => (
 );
 
 has build_types => (
-    is      => 'ro',
-    isa     => ArrayRef [ InstanceOf ['WebService::TeamCity::BuildType'] ],
+    is => 'ro',
+    isa =>
+        ArrayRef [ InstanceOf ['WebService::TeamCity::Entity::BuildType'] ],
     lazy    => 1,
     default => sub {
         $_[0]->_inflate_array(
@@ -54,7 +55,7 @@ has build_types => (
 
 # has templates => (
 #     is      => 'ro',
-#     isa     => ArrayRef [ InstanceOf ['WebService::TeamCity::BuildType'] ],
+#     isa     => ArrayRef [ InstanceOf ['WebService::TeamCity::Entity::BuildType'] ],
 #     lazy    => 1,
 #     default => sub {
 #         $_[0]->_inflate_array(
@@ -91,10 +92,10 @@ has build_types => (
 
 with(
     'WebService::TeamCity::Entity',
-    'WebService::TeamCity::HasDescription',
-    'WebService::TeamCity::HasID',
-    'WebService::TeamCity::HasName',
-    'WebService::TeamCity::HasWebURL',
+    'WebService::TeamCity::Entity::HasDescription',
+    'WebService::TeamCity::Entity::HasID',
+    'WebService::TeamCity::Entity::HasName',
+    'WebService::TeamCity::Entity::HasWebURL',
 );
 
 sub _build_parent_project {
@@ -157,17 +158,17 @@ Returns true if the project has been archived.
 
 =head2 $project->parent_project
 
-Returns the L<WebService::TeamCity::Project> for the project's parent, if it
-has one.
+Returns the L<WebService::TeamCity::Entity::Project> for the project's parent,
+if it has one.
 
 =head2 $project->child_projects
 
-Returns an arrayref of L<WebService::TeamCity::Project> objects. If there are
-no child projects it returns an empty arrayref.
+Returns an arrayref of L<WebService::TeamCity::Entity::Project> objects. If
+there are no child projects it returns an empty arrayref.
 
 =head2 $project->build_types
 
-Returns an arrayref of L<WebService::TeamCity::BuildType> objects for the
-build types associated with this project.
+Returns an arrayref of L<WebService::TeamCity::Entity::BuildType> objects for
+the build types associated with this project.
 
 =cut

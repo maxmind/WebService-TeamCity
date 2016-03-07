@@ -1,4 +1,4 @@
-package WebService::TeamCity::HasWebURL;
+package WebService::TeamCity::Entity::HasWebURL;
 
 use v5.10;
 use strict;

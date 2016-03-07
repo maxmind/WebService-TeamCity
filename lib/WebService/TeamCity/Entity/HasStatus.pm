@@ -1,4 +1,4 @@
-package WebService::TeamCity::HasStatus;
+package WebService::TeamCity::Entity::HasStatus;
 
 use v5.10;
 use strict;

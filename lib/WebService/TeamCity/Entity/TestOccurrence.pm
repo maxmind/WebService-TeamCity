@@ -1,4 +1,4 @@
-package WebService::TeamCity::TestOccurrence;
+package WebService::TeamCity::Entity::TestOccurrence;
 
 use v5.10;
 use strict;
@@ -26,7 +26,7 @@ has duration => (
 
 has build => (
     is      => 'ro',
-    isa     => InstanceOf ['WebService::TeamCity::Build'],
+    isa     => InstanceOf ['WebService::TeamCity::Entity::Build'],
     lazy    => 1,
     default => sub {
         $_[0]->_inflate_one(
@@ -45,9 +45,9 @@ has details => (
 
 with(
     'WebService::TeamCity::Entity',
-    'WebService::TeamCity::HasID',
-    'WebService::TeamCity::HasName',
-    'WebService::TeamCity::HasStatus',
+    'WebService::TeamCity::Entity::HasID',
+    'WebService::TeamCity::Entity::HasName',
+    'WebService::TeamCity::Entity::HasStatus',
 );
 
 1;
@@ -105,7 +105,7 @@ Returns true if the test occurrence failed.
 
 =head2 $test->build
 
-Returns the L<WebService::TeamCity::Build> for the test occurrence.
+Returns the L<WebService::TeamCity::Entity::Build> for the test occurrence.
 
 =head2 $test->duration
 

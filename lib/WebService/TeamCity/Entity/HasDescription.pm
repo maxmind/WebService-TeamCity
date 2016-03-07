@@ -1,4 +1,4 @@
-package WebService::TeamCity::HasDescription;
+package WebService::TeamCity::Entity::HasDescription;
 
 use v5.10;
 use strict;

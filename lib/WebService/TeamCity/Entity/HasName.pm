@@ -1,4 +1,4 @@
-package WebService::TeamCity::HasID;
+package WebService::TeamCity::Entity::HasName;
 
 use v5.10;
 use strict;
@@ -11,7 +11,7 @@ use Types::Standard qw( Str );
 
 use Moo::Role;
 
-has id => (
+has name => (
     is       => 'ro',
     isa      => Str,
     required => 1,
@@ -19,4 +19,5 @@ has id => (
 
 1;
 
-# ABSTRACT: Role for any REST API object with an ID
+# ABSTRACT: Role for any REST API object with a name
+

@@ -119,7 +119,7 @@ sub test_projects {
     );
     isa_ok(
         $children->[0],
-        'WebService::TeamCity::Project',
+        'WebService::TeamCity::Entity::Project',
         'first project'
     );
 
@@ -152,7 +152,7 @@ sub test_build_types {
     my $git_build_91 = $build_types->[0];
     isa_ok(
         $git_build_91,
-        'WebService::TeamCity::BuildType',
+        'WebService::TeamCity::Entity::BuildType',
         'first build type'
     );
 
@@ -296,7 +296,7 @@ sub test_test_occurrence {
     my $build_from_test = $test->build;
     isa_ok(
         $build_from_test,
-        'WebService::TeamCity::Build',
+        'WebService::TeamCity::Entity::Build',
         '$test->build'
     );
     is(

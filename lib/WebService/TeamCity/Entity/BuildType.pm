@@ -1,4 +1,4 @@
-package WebService::TeamCity::BuildType;
+package WebService::TeamCity::Entity::BuildType;
 
 use v5.10;
 use strict;
@@ -8,14 +8,14 @@ use namespace::autoclean;
 our $VERSION = '0.01';
 
 use Types::Standard qw( InstanceOf );
-use WebService::TeamCity::Build;
+use WebService::TeamCity::Entity::Build;
 use WebService::TeamCity::Iterator;
 
 use Moo;
 
 has project => (
     is      => 'ro',
-    isa     => InstanceOf ['WebService::TeamCity::Project'],
+    isa     => InstanceOf ['WebService::TeamCity::Entity::Project'],
     lazy    => 1,
     default => sub {
         $_[0]->_inflate_one(
@@ -66,10 +66,10 @@ has builds => (
 
 with(
     'WebService::TeamCity::Entity',
-    'WebService::TeamCity::HasDescription',
-    'WebService::TeamCity::HasID',
-    'WebService::TeamCity::HasName',
-    'WebService::TeamCity::HasWebURL',
+    'WebService::TeamCity::Entity::HasDescription',
+    'WebService::TeamCity::Entity::HasID',
+    'WebService::TeamCity::Entity::HasName',
+    'WebService::TeamCity::Entity::HasWebURL',
 );
 
 1;
@@ -116,12 +116,12 @@ Returns a browser-friendly URI for the build type.
 
 =head2 $build_type->project
 
-Returns the L<WebService::TeamCity::Project> for the project associated with
-the build type.
+Returns the L<WebService::TeamCity::Entity::Project> for the project
+associated with the build type.
 
 =head2 $build_type->builds
 
 Returns a L<WebService::TeamCity::Iterator> which returns
-L<WebService::TeamCity::Build> objects.
+L<WebService::TeamCity::Entity::Build> objects.
 
 =cut

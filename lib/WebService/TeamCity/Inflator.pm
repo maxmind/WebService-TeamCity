@@ -29,7 +29,7 @@ sub _inflate_one {
 
     return unless $raw;
 
-    return ( 'WebService::TeamCity::' . $class )->new(
+    return ( 'WebService::TeamCity::Entity::' . $class )->new(
         %{$raw},
         client => $self->client,
         ( $self_key ? ( $self_key => $self ) : () ),
@@ -46,7 +46,7 @@ sub _iterator_for {
 
     return WebService::TeamCity::Iterator->new(
         client    => $self->client,
-        class     => 'WebService::TeamCity::' . $class,
+        class     => 'WebService::TeamCity::Entity::' . $class,
         items_key => $items_key,
         ( $raw->{next_href} ? ( next_href => $raw->{next_href} ) : () ),
         items => $raw->{$items_key},

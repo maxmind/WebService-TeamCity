@@ -1,4 +1,4 @@
-package WebService::TeamCity::Build;
+package WebService::TeamCity::Entity::Build;
 
 use v5.10;
 use strict;
@@ -8,9 +8,9 @@ use namespace::autoclean;
 our $VERSION = '0.01';
 
 use Types::Standard qw( Bool Maybe InstanceOf Str );
-use WebService::TeamCity::BuildType;
+use WebService::TeamCity::Entity::BuildType;
 use WebService::TeamCity::Iterator;
-use WebService::TeamCity::TestOccurrence;
+use WebService::TeamCity::Entity::TestOccurrence;
 use WebService::TeamCity::Types qw( BuildStatus );
 
 use Moo;
@@ -23,7 +23,7 @@ has status => (
 
 has build_type => (
     is      => 'ro',
-    isa     => InstanceOf ['WebService::TeamCity::BuildType'],
+    isa     => InstanceOf ['WebService::TeamCity::Entity::BuildType'],
     lazy    => 1,
     default => sub {
         $_[0]->_inflate_one(
@@ -129,9 +129,9 @@ has finish_date => (
 
 with(
     'WebService::TeamCity::Entity',
-    'WebService::TeamCity::HasID',
-    'WebService::TeamCity::HasStatus',
-    'WebService::TeamCity::HasWebURL',
+    'WebService::TeamCity::Entity::HasID',
+    'WebService::TeamCity::Entity::HasStatus',
+    'WebService::TeamCity::Entity::HasWebURL',
 );
 
 # sub _build_artifacts_dir {
@@ -188,13 +188,14 @@ Returns a browser-friendly URI for the build.
 
 =head2 $build->build_type
 
-Returns the L<WebService::TeamCity::BuildType> object for this build's type.
+Returns the L<WebService::TeamCity::Entity::BuildType> object for this build's
+type.
 
 =head2 $build->test_occurrences
 
 Returns a L<WebService::TeamCity::Iterator> for each of the build's test
-occurrences. The iterator returns L<WebService::TeamCity::TestOccurrence>
-objects.
+occurrences. The iterator returns
+L<WebService::TeamCity::Entity::TestOccurrence> objects.
 
 =head2 $build->branch_name
 
