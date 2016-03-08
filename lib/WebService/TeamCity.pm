@@ -355,6 +355,11 @@ The entry point for the API is this module, C<WebService::TeamCity>. Once you
 have an object of that class, you can use it to get at various other objects
 provided by the API.
 
+=head1 INSTABILITY WARNING
+
+This distribution is still in its early days and its API may change without
+warning in future releases.
+
 =head1 API
 
 This module provides the top-level client for the API.
