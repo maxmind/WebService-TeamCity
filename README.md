@@ -43,6 +43,11 @@ The entry point for the API is this module, `WebService::TeamCity`. Once you
 have an object of that class, you can use it to get at various other objects
 provided by the API.
 
+# INSTABILITY WARNING
+
+This distribution is still in its early days and its API may change without
+warning in future releases.
+
 # API
 
 This module provides the top-level client for the API.
@@ -79,8 +84,8 @@ This method takes named parameters to construct a new TeamCity client.
 
 ## $client->projects(...)
 
-Returns an array reference of [WebService::TeamCity::Project](https://metacpan.org/pod/WebService::TeamCity::Project) objects. This
-contains all the projects defined on the TeamCity server.
+Returns an array reference of [WebService::TeamCity::Entity::Project](https://metacpan.org/pod/WebService::TeamCity::Entity::Project)
+objects. This contains all the projects defined on the TeamCity server.
 
 You can pass arguments as key/value pairs to limit the projects returned:
 
@@ -94,8 +99,8 @@ You can pass arguments as key/value pairs to limit the projects returned:
 
 ## $client->build\_types
 
-Returns an array reference of [WebService::TeamCity::BuildTypes](https://metacpan.org/pod/WebService::TeamCity::BuildTypes) objects. This
-contains all the build types defined on the TeamCity server.
+Returns an array reference of [WebService::TeamCity::Entity::BuildType](https://metacpan.org/pod/WebService::TeamCity::Entity::BuildType)
+objects. This contains all the build types defined on the TeamCity server.
 
 You can pass arguments as key/value pairs to limit the build types returned:
 
@@ -136,7 +141,7 @@ You can pass arguments as key/value pairs to limit the build types returned:
 ## $client->builds
 
 Returns a [WebService::TeamCity::Iterator](https://metacpan.org/pod/WebService::TeamCity::Iterator) which returns
-[WebService::TeamCity::Build](https://metacpan.org/pod/WebService::TeamCity::Build) objects.
+[WebService::TeamCity::Entity::Build](https://metacpan.org/pod/WebService::TeamCity::Entity::Build) objects.
 
 You can pass arguments as key/value pairs to limit the projects returned:
 

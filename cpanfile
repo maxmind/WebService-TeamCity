@@ -21,13 +21,11 @@ requires "strict" => "0";
 requires "warnings" => "0";
 
 on 'test' => sub {
-  requires "Carp::Always" => "0";
   requires "ExtUtils::MakeMaker" => "0";
   requires "File::Spec" => "0";
   requires "HTTP::Cookies" => "0";
   requires "HTTP::Headers" => "0";
   requires "HTTP::Response" => "0";
-  requires "Path::Class" => "0";
   requires "Path::Tiny" => "0";
   requires "Test::LWP::UserAgent" => "0";
   requires "Test::More" => "0.96";
