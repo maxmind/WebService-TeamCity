@@ -29,7 +29,6 @@ $ua->map_response(
     }
 );
 
-use Carp::Always;
 {
     my $client = WebService::TeamCity->new(
         host     => 'example.com',
