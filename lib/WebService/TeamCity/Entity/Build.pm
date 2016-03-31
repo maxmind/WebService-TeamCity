@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Types::Standard qw( Bool Maybe InstanceOf Str );
 use WebService::TeamCity::Entity::BuildType;
