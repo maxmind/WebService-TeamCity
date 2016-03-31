@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.02     2016-03-31
+
 - Fixed a bug where creating an iterator for a response with no items to
   iterate over would lead to an error being through when you called
   $iterator->next. This is now handled sanely, and next() returns undef like

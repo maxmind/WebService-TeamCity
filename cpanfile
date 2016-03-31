@@ -27,8 +27,10 @@ on 'test' => sub {
   requires "HTTP::Headers" => "0";
   requires "HTTP::Response" => "0";
   requires "Path::Tiny" => "0";
+  requires "Test::Fatal" => "0";
   requires "Test::LWP::UserAgent" => "0";
   requires "Test::More" => "0.96";
+  requires "URI::Escape" => "0";
   requires "autodie" => "0";
   requires "perl" => "v5.10.0";
 };
