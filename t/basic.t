@@ -2,11 +2,13 @@ use strict;
 use warnings;
 
 use Test::More 0.96;
+use Test::Fatal;
 
 use DateTime;
 use HTTP::Response;
 use Path::Tiny;
 use Test::LWP::UserAgent;
+use URI::Escape qw( uri_unescape );
 use WebService::TeamCity;
 
 my $ua = Test::LWP::UserAgent->new( network_fallback => 0 );
@@ -21,7 +23,7 @@ $ua->map_response(
         $path =~ s{/httpAuth/app/rest/}{};
         $path =~ s{/(?=\?|$)}{};
 
-        my $file = path( 't/fixtures', $path . '.json' );
+        my $file = path( 't/fixtures', uri_unescape($path) . '.json' );
 
         return HTTP::Response->new(404)
             unless $file->exists;
@@ -48,27 +50,47 @@ $ua->map_response(
     my $test  = test_build($build);
     test_test_occurrence($test);
 
-    {
-        my $build_types = $client->build_types;
-        is(
-            scalar @{$build_types},
-            536,
-            'got 536 build types'
-        );
-    }
-
-    {
-        my $builds = $client->builds;
-        my @builds;
-        while ( my $b = $builds->next ) {
-            push @builds, $b;
+    subtest(
+        'all build types',
+        sub {
+            my $build_types = $client->build_types;
+            is(
+                scalar @{$build_types},
+                536,
+                'got 536 build types'
+            );
         }
-        is(
-            scalar @builds,
-            200,
-            'found 200 builds'
-        );
-    }
+    );
+
+    subtest(
+        'all builds',
+        sub {
+            my $builds = $client->builds;
+            my @builds;
+            while ( my $b = $builds->next ) {
+                push @builds, $b;
+            }
+            is(
+                scalar @builds,
+                200,
+                'found 200 builds'
+            );
+        }
+    );
+
+    subtest(
+        'iterator for empty result',
+        sub {
+            my $builds = $client->builds( id => 'has-no-builds' );
+            my $b;
+            is(
+                exception { $b = $builds->next },
+                undef,
+                'can call next on iterator'
+            );
+            is( $b, undef, 'next returns undef' );
+        }
+    );
 }
 
 done_testing();

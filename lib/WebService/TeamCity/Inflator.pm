@@ -44,13 +44,21 @@ sub _iterator_for {
 
     my $raw = $self->client->response_for( uri => $uri );
 
-    return WebService::TeamCity::Iterator->new(
+    my %args = (
         client    => $self->client,
         class     => 'WebService::TeamCity::Entity::' . $class,
         items_key => $items_key,
-        ( $raw->{next_href} ? ( next_href => $raw->{next_href} ) : () ),
-        items => $raw->{$items_key},
+        items     => [],
     );
+
+    if ($raw) {
+        $args{next_href} = $raw->{next_href}
+            if $raw->{next_href};
+        $args{items} = $raw->{$items_key}
+            if $raw->{$items_key};
+    }
+
+    return WebService::TeamCity::Iterator->new(%args);
 }
 
 1;
