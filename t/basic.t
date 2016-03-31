@@ -49,6 +49,15 @@ $ua->map_response(
     my $build = test_build_types($git);
     my $test  = test_build($build);
     test_test_occurrence($test);
+}
+
+{
+    my $client = WebService::TeamCity->new(
+        host     => 'example.com',
+        user     => 'u',
+        password => 'p',
+        ua       => $ua,
+    );
 
     subtest(
         'all build types',
@@ -67,8 +76,8 @@ $ua->map_response(
         sub {
             my $builds = $client->builds;
             my @builds;
-            while ( my $b = $builds->next ) {
-                push @builds, $b;
+            while ( my $build = $builds->next ) {
+                push @builds, $build;
             }
             is(
                 scalar @builds,
@@ -82,9 +91,9 @@ $ua->map_response(
         'iterator for empty result',
         sub {
             my $builds = $client->builds( id => 'has-no-builds' );
-            my $b;
+            my $build;
             is(
-                exception { $b = $builds->next },
+                exception { $build = $builds->next },
                 undef,
                 'can call next on iterator'
             );
