@@ -5,6 +5,9 @@
   $iterator->next. This is now handled sanely, and next() returns undef like
   it should.
 
+- Added a WebService::TeamCity::Entity::TestOccurrence->unknown method for
+  tests where the status is set to UNKNOWN.
+
 
 0.01     2016-03-07
 

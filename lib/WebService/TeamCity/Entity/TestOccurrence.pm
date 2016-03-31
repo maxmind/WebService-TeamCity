@@ -7,7 +7,7 @@ use namespace::autoclean;
 
 our $VERSION = '0.02';
 
-use Types::Standard qw( InstanceOf Int Str );
+use Types::Standard qw( Bool InstanceOf Int Str );
 use WebService::TeamCity::Types qw( TestStatus );
 
 use Moo;
@@ -34,6 +34,13 @@ has build => (
             'Build',
         );
     },
+);
+
+has unknown => (
+    is      => 'ro',
+    isa     => Bool,
+    lazy    => 1,
+    default => sub { $_[0]->status eq 'UNKNOWN' },
 );
 
 has details => (
@@ -102,6 +109,10 @@ Returns true if the test occurrence passed.
 =head2 $test->failed
 
 Returns true if the test occurrence failed.
+
+=head2 $test->unknown
+
+Returns true if the test occurrence neither passed nor failed.
 
 =head2 $test->build
 
