@@ -76,7 +76,7 @@ sub _fetch_more {
 
     return 0 unless $self->_has_next_href;
 
-    my $raw = $self->client->response_for(
+    my $raw = $self->client->decoded_json_for(
         uri => $self->client->base_uri . $self->_next_href );
 
     push @{ $self->_items }, @{ $raw->{ $self->items_key } };

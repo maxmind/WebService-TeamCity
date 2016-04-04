@@ -42,7 +42,7 @@ sub _iterator_for {
     my $items_key = shift;
     my $class     = shift;
 
-    my $raw = $self->client->response_for( uri => $uri );
+    my $raw = $self->client->decoded_json_for( uri => $uri );
 
     my %args = (
         client    => $self->client,

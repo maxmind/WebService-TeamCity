@@ -75,8 +75,8 @@ with 'WebService::TeamCity::Inflator';
 sub projects {
     my $self = shift;
 
-    my $uri = $self->_uri_for('projects');
-    my $projects = $self->response_for( uri => $uri );
+    my $uri = $self->uri_for('projects');
+    my $projects = $self->decoded_json_for( uri => $uri );
 
     return $self->_inflate_array( $projects->{project}, 'Project' );
 }
@@ -84,8 +84,8 @@ sub projects {
 sub build_types {
     my $self = shift;
 
-    my $uri = $self->_uri_for('buildTypes');
-    my $types = $self->response_for( uri => $uri );
+    my $uri = $self->uri_for('buildTypes');
+    my $types = $self->decoded_json_for( uri => $uri );
 
     return $self->_inflate_array( $types->{build_type}, 'BuildType' );
 }
@@ -113,7 +113,7 @@ sub build_types {
             $query{locator} = $locator;
         }
 
-        my $uri = $self->_uri_for( 'builds', \%query );
+        my $uri = $self->uri_for( 'builds', \%query );
         return $self->_iterator_for(
             $uri,
             'build',
@@ -221,35 +221,10 @@ sub build_types {
 
 sub client { $_[0] }
 
-sub response_for {
+sub decoded_json_for {
     my $self = shift;
-    my %args = @_;
 
-    my $method = $args{method} // 'GET';
-
-    my $request = HTTP::Request->new(
-        $method => $args{uri},
-        [ Accept => 'application/json' ],
-    );
-    $request->authorization_basic( $self->user, $self->password );
-
-    my $response = $self->ua->request($request);
-    unless ( $response->is_success ) {
-        die '['
-            . scalar(localtime)
-            . '] Error response:' . "\n\n"
-            . $response->as_string
-            . "\nFor the request:\n\n"
-            . $request->as_string;
-    }
-
-    unless ( $response->content_type =~ /json/ ) {
-        die 'Expected a JSON response but got '
-            . $response->content_type
-            . ' instead'
-            . "\nFor the request:\n\n"
-            . $request->as_string;
-    }
+    my ( $response, $request ) = $self->make_request(@_);
 
     my $json = try {
 
@@ -267,7 +242,32 @@ sub response_for {
     return $self->_decamelize_keys($json);
 }
 
-sub _uri_for {
+sub make_request {
+    my $self = shift;
+    my %args = @_;
+
+    my $method = $args{method} // 'GET';
+
+    my $request = HTTP::Request->new(
+        $method => $args{uri},
+        [ Accept => 'application/json' ],
+    );
+    $request->authorization_basic( $self->user, $self->password );
+
+    my $response = $self->ua->request( $request, $args{file} // () );
+    unless ( $response->is_success ) {
+        die '['
+            . scalar(localtime)
+            . '] Error response:' . "\n\n"
+            . $response->as_string
+            . "\nFor the request:\n\n"
+            . $request->as_string;
+    }
+
+    return ( $response, $request );
+}
+
+sub uri_for {
     my $self  = shift;
     my $path  = shift // die 'No path given';
     my $query = shift;
@@ -316,7 +316,7 @@ __END__
 
 =pod
 
-=for Pod::Coverage response_for
+=for Pod::Coverage decoded_json_for make_request
 
 =head1 SYNOPSIS
 

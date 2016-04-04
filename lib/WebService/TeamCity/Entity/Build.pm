@@ -7,7 +7,10 @@ use namespace::autoclean;
 
 our $VERSION = '0.03';
 
-use Types::Standard qw( Bool Maybe InstanceOf Str );
+use Archive::Zip;
+use File::pushd qw( pushd );
+use Path::Tiny 0.086 qw( path tempdir );
+use Types::Standard qw( ArrayRef Bool Maybe InstanceOf Str );
 use WebService::TeamCity::Entity::BuildType;
 use WebService::TeamCity::Iterator;
 use WebService::TeamCity::Entity::TestOccurrence;
@@ -102,12 +105,12 @@ has finish_date => (
     },
 );
 
-# has artifacts_dir => (
-#     is      => 'ro',
-#     isa     => InstanceOf ['Path::Tiny'],
-#     lazy    => 1,
-#     builder => '_build_artifacts_dir',
-# );
+has _artifacts_dir => (
+    is      => 'ro',
+    isa     => ArrayRef,
+    lazy    => 1,
+    builder => '_build_artifacts_dir',
+);
 
 # has statistics
 
@@ -134,9 +137,54 @@ with(
     'WebService::TeamCity::Entity::HasWebURL',
 );
 
-# sub _build_artifacts_dir {
-#     ...;
-# }
+sub artifacts_dir { $_[0]->_artifacts_dir->[1] }
+
+sub _build_artifacts_dir {
+    my $self = shift;
+
+    my $tempdir = tempdir( CLEANUP => 1 );
+
+    ( my $base = $self->href ) =~ s{/$}{};
+
+    my $zip = $tempdir->child('artifacts.zip');
+    $self->client->make_request(
+        uri  => $self->client->uri_for( $base . '/artifacts/archived' ),
+        file => $zip->stringify,
+    );
+
+    my $dir = $tempdir->child('artifacts');
+    $dir->mkpath(
+        {
+            verbose => 0,
+            ## no critic (ValuesAndExpressions::ProhibitLeadingZeros)
+            mode => 0755,
+        }
+    );
+
+    # The zip file downloaded from TC may have very odd permissions for
+    # directories (dirs without execute bits on). The
+    # Archive::Zip::Archive->extractTree method simply blows up because of
+    # this. It makes a parent dir and then cannot write the files it contains
+    # into that directory.
+    #
+    # So we go through each member in the zip and extract it ourselves, then
+    # change the permissions to something sane.
+    my $az = Archive::Zip->new;
+    $az->read( $zip->stringify );
+
+    my $pushed = pushd($dir);
+
+    for my $member ( $az->members ) {
+        $az->extractMember($member);
+        my $extracted = $dir->child( $member->fileName );
+        ## no critic (ValuesAndExpressions::ProhibitLeadingZeros)
+        $extracted->chmod( $extracted->is_dir ? 0755 : 0644 );
+    }
+
+    # We have to save the temp dir in the object or it gets cleaned up when
+    # $tempdir goes out of scope.
+    return [ $tempdir, $dir ];
+}
 
 1;
 
@@ -236,5 +284,14 @@ build has not yet been started then this returns C<undef>.
 
 Returns a L<DateTime> object indicating when the build was finished. If the
 build has not yet been finished then this returns C<undef>.
+
+=head2 $build->artifacts_dir
+
+This method fetches all of the artifacts for the build and extracts them to a
+new temporary directory. It then returns the directory containing the
+artifacts as a L<Path::Tiny> object.
+
+Note that this temporary directory will be cleaned up when the build object
+goes out of scope.
 
 =cut
