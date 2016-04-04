@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+- Added a new WebService::TeamCity::Entity::Build->artifacts_dir method. This
+  downloads the zip archive of the build's artifacts and extracts it to a
+  temporary directory.
+
+
 0.02     2016-03-31
 
 - Fixed a bug where creating an iterator for a response with no items to
