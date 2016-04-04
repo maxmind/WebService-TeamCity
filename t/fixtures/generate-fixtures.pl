@@ -1,19 +1,22 @@
 use v5.10;
 use strict;
 use warnings;
-use autodie;
+use autodie qw( :all );
 
+use Archive::Zip;
 use Cpanel::JSON::XS qw( decode_json );
 use Data::Visitor::Callback;
+use File::pushd qw( pushd );
 use HTTP::Cookies;
 use HTTP::Headers;
+use List::Util qw( first );
 use LWP::UserAgent;
-use Path::Class qw( dir );
+use Path::Tiny qw( path tempdir );
 use URI;
 
-my $dir      = dir('t/fixtures');
-my $uri_base = 'https://teamcity.jetbrains.com';
-my @uris     = map { URI->new( $uri_base . $_ ) } (
+my $fixtures_dir = path('t/fixtures');
+my $uri_base     = 'https://teamcity.jetbrains.com';
+my @uris         = map { URI->new( $uri_base . $_ ) } (
       @ARGV
     ? @ARGV
     : qw(
@@ -45,7 +48,7 @@ for my $uri (@uris) {
     ( my $path = $uri ) =~ s{^\Q$uri_base\E(?:/httpAuth)?/app/rest/}{};
     $path =~ s{/$}{};
 
-    my $file = $dir->file( $path . '.json' );
+    my $file = $fixtures_dir->file( $path . '.json' );
 
     ## no critic (ValuesAndExpressions::ProhibitLeadingZeros)
     $file->parent->mkpath( 0, 0755 );
@@ -83,4 +86,43 @@ for my $uri (@uris) {
             return $node;
         },
     )->visit($json);
+}
+
+## no critic (ValuesAndExpressions::ProhibitLeadingZeros)
+{
+    # Make a fake set of artifacts for one build
+    my $temp = tempdir();
+    my $dir  = $temp->child('test-results');
+    $dir->mkpath(
+        {
+            verbose => 0,
+            mode    => 0755,
+        },
+    );
+    $dir->child('result-1.json')->spew(qq[{ "foo": 42 }\n]);
+    $dir->child('result-2.txt')->spew("Some text in a file\n");
+
+    {
+        my $pushed = pushd($temp);
+        system( 'zip', '-r', '-q', 'artifacts.zip', $dir->basename );
+    }
+
+    my $artifacts_dir = $fixtures_dir->child('builds/id:661984/artifacts/');
+    $artifacts_dir->mkpath(
+        {
+            verbose => 0,
+            mode    => 0755,
+        },
+    );
+
+    # We want to simulate bizarro permissions I've seen in downloaded archives
+    # where some dirs have 0660 perms.
+    my $zip_file = $artifacts_dir->child('archived');
+    $temp->child('artifacts.zip')->copy($zip_file);
+
+    my $az = Archive::Zip->new;
+    $az->read( $zip_file->stringify );
+    my $member = first { $_->fileName eq 'test-results/' } $az->members;
+    $member->unixFileAttributes(0644);
+    $az->overwrite;
 }
