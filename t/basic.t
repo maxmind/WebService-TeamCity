@@ -1,41 +1,16 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More 0.96;
 use Test::Fatal;
 
 use DateTime;
-use HTTP::Response;
-use Path::Tiny;
-use Test::LWP::UserAgent;
-use URI::Escape qw( uri_unescape );
+use Test::UA qw( ua );
 use WebService::TeamCity;
 
-my $ua = Test::LWP::UserAgent->new( network_fallback => 0 );
-$ua->map_response(
-    sub {
-        return 1;
-    },
-    sub {
-        my $req = shift;
-
-        my $path = $req->uri->path_query;
-        $path =~ s{/httpAuth/app/rest/}{};
-        $path =~ s{/(?=\?|$)}{};
-
-        my $file = path( 't/fixtures', uri_unescape($path) . '.json' );
-
-        return HTTP::Response->new(404)
-            unless $file->exists;
-
-        return HTTP::Response->new(
-            200,
-            undef,
-            [ 'Content-Type' => 'application/json' ],
-            scalar $file->slurp,
-        );
-    }
-);
+my $ua = ua();
 
 {
     my $client = WebService::TeamCity->new(
