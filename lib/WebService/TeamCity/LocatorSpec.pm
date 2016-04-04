@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Type::Params qw( compile );
 use Types::Standard qw( ArrayRef Bool Dict HashRef Int Optional Str slurpy );
