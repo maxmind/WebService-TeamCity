@@ -1,11 +1,14 @@
+requires "Archive::Zip" => "0";
 requires "Cpanel::JSON::XS" => "0";
 requires "Data::Visitor::Callback" => "0";
 requires "DateTime" => "0";
 requires "DateTime::Format::Strptime" => "0";
+requires "File::pushd" => "0";
 requires "HTTP::Request" => "0";
 requires "LWP::UserAgent" => "0";
 requires "Moo" => "0";
 requires "Moo::Role" => "0";
+requires "Path::Tiny" => "0.086";
 requires "String::CamelSnakeKebab" => "0";
 requires "Try::Tiny" => "0";
 requires "Type::Library" => "0";
@@ -21,17 +24,19 @@ requires "strict" => "0";
 requires "warnings" => "0";
 
 on 'test' => sub {
+  requires "Exporter" => "0";
   requires "ExtUtils::MakeMaker" => "0";
   requires "File::Spec" => "0";
   requires "HTTP::Cookies" => "0";
   requires "HTTP::Headers" => "0";
   requires "HTTP::Response" => "0";
-  requires "Path::Tiny" => "0";
+  requires "List::Util" => "0";
   requires "Test::Fatal" => "0";
   requires "Test::LWP::UserAgent" => "0";
   requires "Test::More" => "0.96";
   requires "URI::Escape" => "0";
   requires "autodie" => "0";
+  requires "lib" => "0";
   requires "perl" => "v5.10.0";
 };
 

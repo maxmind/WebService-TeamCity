@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.03     2016-04-04
+
 - Added a new WebService::TeamCity::Entity::Build->artifacts_dir method. This
   downloads the zip archive of the build's artifacts and extracts it to a
   temporary directory.
