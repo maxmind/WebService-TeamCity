@@ -105,6 +105,18 @@ has finish_date => (
     },
 );
 
+has revisions => (
+    is      => 'ro',
+    isa     => ArrayRef [ InstanceOf ['WebService::TeamCity::Revision'] ],
+    lazy    => 1,
+    default => sub {
+        $self->_inflate_array(
+            $self->_full_data->{revisions}{revision},
+            '+WebService::TeamCity::Revision',
+        );
+    },
+}
+
 has _artifacts_dir => (
     is      => 'ro',
     isa     => ArrayRef,

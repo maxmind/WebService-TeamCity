@@ -13,12 +13,6 @@ use Types::Standard qw( HashRef InstanceOf Str );
 
 use Moo::Role;
 
-has client => (
-    is       => 'ro',
-    isa      => InstanceOf ['WebService::TeamCity'],
-    required => 1,
-);
-
 has href => (
     is       => 'ro',
     isa      => Str,
@@ -32,7 +26,7 @@ has _full_data => (
     builder => '_build_full_data',
 );
 
-with 'WebService::TeamCity::Inflator';
+with 'WebService::TeamCity::HasClient', 'WebService::TeamCity::Inflator';
 
 sub _build_full_data {
     my $self = shift;

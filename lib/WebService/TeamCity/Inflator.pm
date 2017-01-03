@@ -29,7 +29,7 @@ sub _inflate_one {
 
     return unless $raw;
 
-    return ( 'WebService::TeamCity::Entity::' . $class )->new(
+    return $self->_full_class($class)->new(
         %{$raw},
         client => $self->client,
         ( $self_key ? ( $self_key => $self ) : () ),
@@ -46,7 +46,7 @@ sub _iterator_for {
 
     my %args = (
         client    => $self->client,
-        class     => 'WebService::TeamCity::Entity::' . $class,
+        class     => $self->_full_class($class),
         items_key => $items_key,
         items     => [],
     );
@@ -59,6 +59,15 @@ sub _iterator_for {
     }
 
     return WebService::TeamCity::Iterator->new(%args);
+}
+
+sub _full_class {
+    my $self  = shift;
+    my $class = shift;
+
+    return $class =~ s/^\+//
+        ? $class
+        : 'WebService::TeamCity::Entity::' . $class;
 }
 
 1;
