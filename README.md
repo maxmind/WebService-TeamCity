@@ -4,7 +4,7 @@ WebService::TeamCity - Client for the TeamCity REST API
 
 # VERSION
 
-version 0.03
+version 0.04
 
 # SYNOPSIS
 
@@ -220,17 +220,22 @@ You can pass arguments as key/value pairs to limit the projects returned:
     Only returns builds which match _all_ of the specified tags. Tags are given
     as strings.
 
+# SUPPORT
+
+Bugs may be submitted through [https://github.com/maxmind/WebService-TeamCity/issues](https://github.com/maxmind/WebService-TeamCity/issues).
+
 # AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-# CONTRIBUTOR
+# CONTRIBUTORS
 
-Dave Rolsky <drolsky@maxmind.com>
+- Dave Rolsky <drolsky@maxmind.com>
+- Greg Oschwald <goschwald@maxmind.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by MaxMind, Inc..
+This software is copyright (c) 2017 by MaxMind, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
