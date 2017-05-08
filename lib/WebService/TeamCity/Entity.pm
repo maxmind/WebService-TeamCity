@@ -43,6 +43,7 @@ sub _build_full_data {
 
 my $parser = DateTime::Format::Strptime->new( pattern => '%Y%m%dT%H%M%S%z' );
 
+## no critic (ProhibitUnusedPrivateSubroutines)
 sub _parse_datetime {
     return $parser->parse_datetime( $_[1] );
 }
