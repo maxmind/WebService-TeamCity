@@ -100,7 +100,6 @@ sub build_types {
             include_paging_args => 1 );
         my ($args) = $check->(@_);
 
-        my $path = 'builds';
         my %query;
         if (
             my $locator

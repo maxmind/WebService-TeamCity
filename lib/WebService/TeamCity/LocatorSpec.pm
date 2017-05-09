@@ -77,6 +77,7 @@ sub locator_string_for_args {
         my $type = $spec{$key};
 
         my $v;
+        ## no critic (ControlStructures::ProhibitCascadingIfElse)
         if ( $type->isa(__PACKAGE__) ) {
             $v
                 = '('

@@ -13,6 +13,7 @@ use Moo::Role;
 
 requires 'client';
 
+## no critic (ProhibitUnusedPrivateSubroutines)
 sub _inflate_array {
     my $self = shift;
     my $raw  = shift;
