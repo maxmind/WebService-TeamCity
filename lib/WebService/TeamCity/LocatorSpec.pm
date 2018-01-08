@@ -72,7 +72,7 @@ sub locator_string_for_args {
     for my $key (
         sort { $a cmp $b }
         grep { exists $args{search_args}{$_} } keys %spec
-        ) {
+    ) {
 
         my $type = $spec{$key};
 

@@ -107,7 +107,7 @@ sub build_types {
                 search_args         => $args,
                 include_paging_args => 1,
             )
-            ) {
+        ) {
 
             $query{locator} = $locator;
         }
