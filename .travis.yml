@@ -5,6 +5,9 @@ addons:
     packages:
       - aspell
       - aspell-en
+cache:
+  directories:
+    - '~/perl5'
 language: perl
 perl:
   - blead
