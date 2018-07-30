@@ -23,6 +23,7 @@ perl:
 matrix:
   allow_failures:
     - perl: blead
+  fast_finish: 'true'
   include:
     - env: COVERAGE=1
       perl: '5.24'
