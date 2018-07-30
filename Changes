@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.04     2018-07-30
+
 - Bool type checks now work properly with Type::Tiny 1.004000 and later.
 
 
