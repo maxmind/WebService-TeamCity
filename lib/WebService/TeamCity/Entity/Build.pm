@@ -14,7 +14,7 @@ use Types::Standard qw( ArrayRef Bool Maybe InstanceOf Str );
 use WebService::TeamCity::Entity::BuildType;
 use WebService::TeamCity::Iterator;
 use WebService::TeamCity::Entity::TestOccurrence;
-use WebService::TeamCity::Types qw( BuildStatus );
+use WebService::TeamCity::Types qw( BuildStatus JSONBool );
 
 use Moo;
 
@@ -58,7 +58,7 @@ has branch_name => (
 
 has default_branch => (
     is        => 'ro',
-    isa       => Bool,
+    isa       => Bool | JSONBool,
     predicate => 'has_default_branch',
 );
 

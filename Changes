@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+- Bool type checks now work properly with Type::Tiny 1.004000 and later.
+
+
 0.03     2016-04-04
 
 - Added a new WebService::TeamCity::Entity::Build->artifacts_dir method. This

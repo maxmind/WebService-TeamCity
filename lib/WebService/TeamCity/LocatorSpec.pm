@@ -8,9 +8,18 @@ use namespace::autoclean;
 our $VERSION = '0.04';
 
 use Type::Params qw( compile );
-use Types::Standard qw( ArrayRef Bool Dict HashRef Int Optional Str slurpy );
+use Types::Standard qw(
+    ArrayRef
+    Bool
+    Dict
+    HashRef
+    Int
+    Optional
+    Str
+    slurpy
+);
 use String::CamelSnakeKebab qw( lower_camel_case );
-use WebService::TeamCity::Types qw( DateTimeObject );
+use WebService::TeamCity::Types qw( DateTimeObject JSONBool );
 
 use Moo;
 
@@ -85,7 +94,7 @@ sub locator_string_for_args {
                 search_args => $args{search_args}{$key} )
                 . ')';
         }
-        elsif ( $type->equals(Bool) ) {
+        elsif ( $type->equals( Bool | JSONBool ) ) {
             $v = $args{search_args}{$key} ? 'true' : 'false';
         }
         elsif ( $type->is_subtype_of(ArrayRef) ) {

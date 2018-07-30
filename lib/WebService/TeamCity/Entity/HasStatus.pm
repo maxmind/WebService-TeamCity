@@ -8,6 +8,7 @@ use namespace::autoclean;
 our $VERSION = '0.04';
 
 use Types::Standard qw( Bool );
+use WebService::TeamCity::Types qw( JSONBool );
 
 use Moo::Role;
 
@@ -15,14 +16,14 @@ requires 'status';
 
 has passed => (
     is      => 'ro',
-    isa     => Bool,
+    isa     => Bool | JSONBool,
     lazy    => 1,
     default => sub { $_[0]->status eq 'SUCCESS' },
 );
 
 has failed => (
     is      => 'ro',
-    isa     => Bool,
+    isa     => Bool | JSONBool,
     lazy    => 1,
     default => sub { $_[0]->status eq 'FAILURE' },
 );
