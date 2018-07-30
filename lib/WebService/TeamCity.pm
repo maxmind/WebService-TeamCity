@@ -14,7 +14,15 @@ use LWP::UserAgent;
 use String::CamelSnakeKebab qw( lower_snake_case );
 use Try::Tiny;
 use Type::Utils qw( class_type );
-use Types::Standard qw( ArrayRef Bool Dict InstanceOf Int Optional Str );
+use Types::Standard qw(
+    ArrayRef
+    Bool
+    Dict
+    InstanceOf
+    Int
+    Optional
+    Str
+);
 use URI::FromHash qw( uri_object );
 use URI::QueryParam;
 use URI;
@@ -23,7 +31,7 @@ use WebService::TeamCity::Entity::BuildType;
 use WebService::TeamCity::Iterator;
 use WebService::TeamCity::LocatorSpec;
 use WebService::TeamCity::Entity::Project;
-use WebService::TeamCity::Types qw( BuildStatus DateTimeObject );
+use WebService::TeamCity::Types qw( BuildStatus DateTimeObject JSONBool );
 
 use Moo;
 
@@ -135,15 +143,15 @@ sub build_types {
                 agent_name       => Str,
                 branch           => Str,
                 build_type       => $self->_build_type_locator_spec,
-                canceled         => Bool,
-                failed_to_start  => Bool,
+                canceled         => Bool | JSONBool,
+                failed_to_start  => Bool | JSONBool,
                 id               => Str,
                 lookup_limit     => Int,
                 number           => Int,
-                personal         => Bool,
-                pinned           => Bool,
+                personal         => Bool | JSONBool,
+                pinned           => Bool | JSONBool,
                 project          => $project_spec,
-                running          => Bool,
+                running          => Bool | JSONBool,
                 since_date       => DateTimeObject,
                 status           => BuildStatus,
                 tags             => ArrayRef [Str],
@@ -180,9 +188,9 @@ sub build_types {
                 affected_project => $project_spec,
                 id               => Str,
                 name             => Str,
-                paused           => Bool,
+                paused           => Bool | JSONBool,
                 project          => $project_spec,
-                template_flag    => Bool,
+                template_flag    => Bool | JSONBool,
             );
 
             # We're not going to allow arbitrarily nested template build
@@ -439,7 +447,7 @@ Only return build types matching this id.
 
 Only return build types matching this name.
 
-=item * paused => Bool
+=item * paused => Bool | JSONBool
 
 Only return build types which are or are not paused.
 
@@ -455,7 +463,7 @@ Only return build types which use the specified template. The template is
 defined the same way as a build type, but you cannot include a C<template> key
 for the template spec too.
 
-=item * template_flag => Bool
+=item * template_flag => Bool | JSONBool
 
 Only return build types which are or are not templates.
 
@@ -489,11 +497,11 @@ Only return builds which were built against the specified branch.
 Only return builds which were built using the specific build type. Build types
 can be specified as defined for the C<build_types> method.
 
-=item * canceled => Bool
+=item * canceled => Bool | JSONBool
 
 Only returns builds which were or were not canceled.
 
-=item * failed_to_start => Bool
+=item * failed_to_start => Bool | JSONBool
 
 Only returns builds which did or did not fail to start.
 
@@ -513,11 +521,11 @@ Only return builds matching this name.
 
 Only return builds matching this number.
 
-=item * personal => Bool
+=item * personal => Bool | JSONBool
 
 Only returns builds which are or are not marked as personal builds.
 
-=item * pinned => Bool
+=item * pinned => Bool | JSONBool
 
 Only returns builds which are or are not pinned.
 
@@ -527,7 +535,7 @@ Only return builds which affect the specified project. Projects can be
 specified as defined for the C<projects> method. This only includes the
 project itself, not its sub-projects.
 
-=item * running => Bool
+=item * running => Bool | JSONBool
 
 Only returns builds which are or are not running.
 

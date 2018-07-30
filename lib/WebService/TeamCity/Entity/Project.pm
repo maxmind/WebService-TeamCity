@@ -10,12 +10,13 @@ our $VERSION = '0.04';
 use Types::Standard qw( ArrayRef Bool InstanceOf Maybe Str );
 use WebService::TeamCity::Entity::BuildType;
 use WebService::TeamCity::Entity::Project;
+use WebService::TeamCity::Types qw( JSONBool );
 
 use Moo;
 
 has archived => (
     is      => 'ro',
-    isa     => Bool,
+    isa     => Bool | JSONBool,
     default => 0,
 );
 

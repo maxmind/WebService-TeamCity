@@ -118,7 +118,7 @@ You can pass arguments as key/value pairs to limit the build types returned:
 
     Only return build types matching this name.
 
-- paused => Bool
+- paused => Bool | JSONBool
 
     Only return build types which are or are not paused.
 
@@ -134,7 +134,7 @@ You can pass arguments as key/value pairs to limit the build types returned:
     defined the same way as a build type, but you cannot include a `template` key
     for the template spec too.
 
-- template\_flag => Bool
+- template\_flag => Bool | JSONBool
 
     Only return build types which are or are not templates.
 
@@ -164,11 +164,11 @@ You can pass arguments as key/value pairs to limit the projects returned:
     Only return builds which were built using the specific build type. Build types
     can be specified as defined for the `build_types` method.
 
-- canceled => Bool
+- canceled => Bool | JSONBool
 
     Only returns builds which were or were not canceled.
 
-- failed\_to\_start => Bool
+- failed\_to\_start => Bool | JSONBool
 
     Only returns builds which did or did not fail to start.
 
@@ -188,11 +188,11 @@ You can pass arguments as key/value pairs to limit the projects returned:
 
     Only return builds matching this number.
 
-- personal => Bool
+- personal => Bool | JSONBool
 
     Only returns builds which are or are not marked as personal builds.
 
-- pinned => Bool
+- pinned => Bool | JSONBool
 
     Only returns builds which are or are not pinned.
 
@@ -202,7 +202,7 @@ You can pass arguments as key/value pairs to limit the projects returned:
     specified as defined for the `projects` method. This only includes the
     project itself, not its sub-projects.
 
-- running => Bool
+- running => Bool | JSONBool
 
     Only returns builds which are or are not running.
 

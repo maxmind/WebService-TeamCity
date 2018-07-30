@@ -9,6 +9,7 @@ our $VERSION = '0.04';
 
 use Types::Standard qw( Bool InstanceOf Int Str );
 use WebService::TeamCity::Types qw( TestStatus );
+use WebService::TeamCity::Types qw( JSONBool );
 
 use Moo;
 
@@ -38,7 +39,7 @@ has build => (
 
 has unknown => (
     is      => 'ro',
-    isa     => Bool,
+    isa     => Bool | JSONBool,
     lazy    => 1,
     default => sub { $_[0]->status eq 'UNKNOWN' },
 );
