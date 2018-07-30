@@ -34,6 +34,9 @@ env:
 before_install:
   - git submodule update --init --recursive
   - eval $(curl https://travis-perl.github.io/init) --auto
+  - 'cpanm --notest App::cpm'
+install:
+  - AUTHOR_TESTING=0 cpm install --cpanfile cpanfile --workers $(test-jobs) --global
 notifications:
   email:
     on_failure: always
