@@ -36,7 +36,7 @@ before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
   - 'cpanm --notest App::cpm'
 install:
-  - AUTHOR_TESTING=0 cpm install --cpanfile cpanfile --workers $(test-jobs) --global
+  - 'AUTHOR_TESTING=0 cpm install --cpanfile cpanfile --workers $(test-jobs) --global --with-recommends --with-suggests --with-configure --with-develop'
 notifications:
   email:
     on_failure: always
